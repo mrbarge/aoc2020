@@ -30,8 +30,16 @@ var _ = Describe("Array helpers", func() {
 			Expect(err).To(BeNil())
 			Expect(r).To(BeEmpty())
 		})
-
 	})
 
-
+	Context("Checking for int in array", func() {
+		It("Behaves correctly", func() {
+			in := []int{1,2,3,4,-5,6,7,8}
+			Expect(helper.ContainsInt(1,in)).To(BeTrue())
+			Expect(helper.ContainsInt(8,in)).To(BeTrue())
+			Expect(helper.ContainsInt(4,in)).To(BeTrue())
+			Expect(helper.ContainsInt(-5,in)).To(BeTrue())
+			Expect(helper.ContainsInt(9,in)).To(BeFalse())
+		})
+	})
 })
