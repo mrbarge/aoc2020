@@ -65,7 +65,7 @@ func main() {
 		fmt.Println("can't read input file: %v", err)
 		os.Exit(1)
 	}
-	data, _ := helper.ReadLines(fh)
+	data, _ := helper.ReadLines(fh, false)
 	ans, err := partOne(data, slope{3,1})
 	fmt.Printf("Part one: %v\n", ans)
 

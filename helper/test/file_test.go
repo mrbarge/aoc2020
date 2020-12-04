@@ -16,7 +16,7 @@ efgh
 ijkl`
 			ir := strings.NewReader(in)
 			out := []string{"abcd", "efgh", "ijkl"}
-			res, err := helper.ReadLines(ir)
+			res, err := helper.ReadLines(ir, false)
 			Expect(err).To(BeNil())
 			Expect(res).To(Equal(out))
 		})
@@ -26,7 +26,7 @@ ijkl`
 efgh`
 			ir := strings.NewReader(in)
 			out := []string{"abcd", "efgh"}
-			res, err := helper.ReadLines(ir)
+			res, err := helper.ReadLines(ir,true)
 			Expect(err).To(BeNil())
 			Expect(res).To(Equal(out))
 		})

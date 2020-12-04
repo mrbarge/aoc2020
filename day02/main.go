@@ -65,7 +65,7 @@ func countFrequency(s string) map[string]int {
 
 func main() {
 	fh, _ := os.Open("input.txt")
-	lines, err := helper.ReadLines(fh)
+	lines, err := helper.ReadLines(fh, false)
 	if err != nil {
 		fmt.Printf("unable to read file %v", err)
 		os.Exit(1)

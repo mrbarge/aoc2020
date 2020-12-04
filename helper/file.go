@@ -8,12 +8,12 @@ import (
 )
 
 // Reads a file and returns each line in a string array, ignoring empty lines
-func ReadLines(fh io.Reader) ([]string, error) {
+func ReadLines(fh io.Reader, ignoreEmpty bool) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(fh)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if len(line) == 0 {
+		if ignoreEmpty && len(line) == 0 {
 			continue
 		}
 		lines = append(lines, scanner.Text())
