@@ -151,7 +151,7 @@ func problem(data []string) (part1 int, part2 int) {
 		v, _ := p.strictValid()
 		if v {
 			part2++
-		} 
+		}
 	}
 
 	return part1, part2
