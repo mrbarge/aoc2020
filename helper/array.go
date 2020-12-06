@@ -22,3 +22,12 @@ func ContainsInt(i int, a []int) bool {
 	}
 	return false
 }
+
+func KeysStr(m map[string]int) (r []string) {
+	r = make([]string, len(m))
+	i := 0
+	for k := range m {
+		r[i] = k
+	}
+	return r
+}

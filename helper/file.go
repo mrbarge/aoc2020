@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"io"
 	"strconv"
+	"strings"
 )
 
 // Reads a file and returns each line in a string array, ignoring empty lines
@@ -12,7 +13,7 @@ func ReadLines(fh io.Reader, ignoreEmpty bool) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(fh)
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := strings.TrimSpace(scanner.Text())
 		if ignoreEmpty && len(line) == 0 {
 			continue
 		}
