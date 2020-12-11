@@ -48,6 +48,20 @@ func partOne(data []string) int {
 	return occ
 }
 
+func partTwo(data []string) int {
+
+	plane := convertData(data)
+
+	diff := 1
+	for diff > 0 {
+		plane, diff = roundTwo(plane)
+	}
+	occ := countOccupied(plane)
+
+	return occ
+
+}
+
 func countOccupied(plane [][]SeatState) (occupied int) {
 	for _, row := range plane {
 		for _, seat := range row {
@@ -57,6 +71,57 @@ func countOccupied(plane [][]SeatState) (occupied int) {
 		}
 	}
 	return occupied
+}
+
+func isOccupied(s SeatState) (occupied bool, keepLooking bool) {
+	if s == OCCUPIED {
+		return true, false
+	}
+	if s == FLOOR {
+		return false, true
+	}
+	return false, false
+}
+
+func countOccupiedNeighboursLOS(plane [][]SeatState, c helper.Coord) int {
+
+	neighbours := 0
+	// count left
+	x := 0
+	y := 0
+	for x = c.X - 1; x >= 0 && plane[c.Y][x] == FLOOR; x-- {}
+	if x >= 0 && plane[c.Y][x] == OCCUPIED {
+		neighbours++
+	}
+	for x = c.X + 1; x < len(plane[0]) && plane[c.Y][x] == FLOOR; x++ {}
+	if x < len(plane[0]) && plane[c.Y][x] == OCCUPIED {
+		neighbours++
+	}
+	for y = c.Y - 1; y >= 0 && plane[y][c.X] == FLOOR; y-- {}
+	if y >= 0 && plane[y][c.X] == OCCUPIED {
+		neighbours++
+	}
+	for y = c.Y + 1; y < len(plane) && plane[y][c.X] == FLOOR; y++ {}
+	if y < len(plane) && plane[y][c.X] == OCCUPIED {
+		neighbours++
+	}
+	for x, y = c.X-1, c.Y-1; x >= 0 && y >= 0 && plane[y][x] == FLOOR; {x--;y--}
+	if x >= 0 && y >= 0 && plane[y][x] == OCCUPIED {
+		neighbours++
+	}
+	for x, y = c.X-1, c.Y+1; x >= 0 && y < len(plane) && plane[y][x] == FLOOR; {x--;y++	}
+	if x >= 0 && y < len(plane) && plane[y][x] == OCCUPIED {
+		neighbours++
+	}
+	for x, y = c.X+1, c.Y+1; x < len(plane[0]) && y < len(plane) && plane[y][x] == FLOOR; {x++;y++}
+	if x < len(plane[0]) && y < len(plane) && plane[y][x] == OCCUPIED {
+		neighbours++
+	}
+	for x, y = c.X+1, c.Y-1; x < len(plane[0]) && y >= 0 && plane[y][x] == FLOOR; {x++;y--}
+	if x < len(plane[0]) && y >= 0 && plane[y][x] == OCCUPIED {
+		neighbours++
+	}
+	return neighbours
 }
 
 func countOccupiedNeighbours(plane [][]SeatState, c helper.Coord) int {
@@ -72,8 +137,6 @@ func countOccupiedNeighbours(plane [][]SeatState, c helper.Coord) int {
 			occupied++
 		}
 	}
-
-	//fmt.Printf("Neighbours for %v are %v (%v occupied)\n", c, neighbours, occupied)
 
 	return occupied
 }
@@ -118,6 +181,46 @@ func round(plane [][]SeatState) ([][]SeatState, int) {
 	return nextPlane, numChanges
 }
 
+func roundTwo(plane [][]SeatState) ([][]SeatState, int) {
+	nextPlane := make([][]SeatState, len(plane))
+	for y, r := range plane {
+		nr := make([]SeatState, len(r))
+		for i, ns := range r {
+			nr[i] = ns
+		}
+		nextPlane[y] = nr
+	}
+
+	numChanges := 0
+	for y, row := range plane {
+		for x, seat := range row {
+			coord := helper.Coord{x, y}
+
+			switch seat {
+			case EMPTY:
+				occupiedNeighbours := countOccupiedNeighboursLOS(plane, coord)
+				if occupiedNeighbours == 0 {
+					nextPlane[y][x] = OCCUPIED
+					numChanges++
+				} else {
+					nextPlane[y][x] = EMPTY
+				}
+			case OCCUPIED:
+				occupiedNeighbours := countOccupiedNeighboursLOS(plane, coord)
+				if occupiedNeighbours >= 5 {
+					nextPlane[y][x] = EMPTY
+					numChanges++
+				} else {
+					nextPlane[y][x] = OCCUPIED
+				}
+			case FLOOR:
+				nextPlane[y][x] = FLOOR
+			}
+		}
+	}
+	return nextPlane, numChanges
+}
+
 func printSeatMap(plane [][]SeatState) {
 	for _, row := range plane {
 		for _, seat := range row {
@@ -140,7 +243,7 @@ func main() {
 	data, _ := helper.ReadLines(fh, true)
 	ans := partOne(data)
 	fmt.Printf("Part one: %v\n", ans)
-	//ans2 := partTwo(data, ans)
-	//fmt.Printf("Part two: %v\n", ans2)
+	ans2 := partTwo(data)
+	fmt.Printf("Part two: %v\n", ans2)
 
 }
