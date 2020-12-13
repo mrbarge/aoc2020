@@ -3,7 +3,6 @@ package main
 import (
 	"aoc2020/helper"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 )
@@ -109,7 +108,7 @@ func partOne(data []string) int {
 		}
 	}
 
-	return int(math.Abs(float64(s.c.X)) + math.Abs(float64(s.c.Y)))
+	return helper.ManhattanDistance(s.c, helper.Coord{0, 0})
 }
 
 func partTwo(data []string) int {
@@ -129,7 +128,7 @@ func partTwo(data []string) int {
 		}
 	}
 
-	return int(math.Abs(float64(s.c.X)) + math.Abs(float64(s.c.Y)))
+	return helper.ManhattanDistance(s.c, helper.Coord{0, 0})
 }
 
 func main() {

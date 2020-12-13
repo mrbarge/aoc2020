@@ -1,5 +1,7 @@
 package helper
 
+// source: https://play.golang.org/p/SmzvkDjYlb
+
 // greatest common divisor
 func GCD(a, b int) int {
 	for b != 0 {
