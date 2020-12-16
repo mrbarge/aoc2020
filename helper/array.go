@@ -1,6 +1,9 @@
 package helper
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 func StrArrayToInt(arr []string) ([]int, error) {
 	ret := make([]int, len(arr))
@@ -10,6 +13,19 @@ func StrArrayToInt(arr []string) ([]int, error) {
 			return nil, err
 		}
 		ret[i] = n
+	}
+	return ret, nil
+}
+
+func StrCsvToIntArray(s string) ([]int, error) {
+	ret := make([]int, 0)
+	nums := strings.Split(s, ",")
+	for _, num := range nums {
+		n, err := strconv.Atoi(num)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, n)
 	}
 	return ret, nil
 }

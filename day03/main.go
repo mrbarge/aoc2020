@@ -62,7 +62,7 @@ func partOne(data []string, s slope) (count int, err error) {
 func main() {
 	fh, err := os.Open("input.txt")
 	if err != nil {
-		fmt.Println("can't read input file: %v", err)
+		fmt.Printf("can't read input file: %v", err)
 		os.Exit(1)
 	}
 	data, _ := helper.ReadLines(fh, false)

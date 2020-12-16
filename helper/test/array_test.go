@@ -42,4 +42,12 @@ var _ = Describe("Array helpers", func() {
 			Expect(helper.ContainsInt(9,in)).To(BeFalse())
 		})
 	})
+
+	Context("Converting string CSV to ints", func() {
+		It("Behaves correctly", func() {
+			in := "1,2,3,4,3,2,1"
+			Expect(helper.StrCsvToIntArray(in)).To(Equal([]int{1,2,3,4,3,2,1}))
+		})
+	})
+
 })

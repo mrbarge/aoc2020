@@ -62,7 +62,7 @@ func main() {
 	fh, _ := os.Open("input.txt")
 	nums, err := helper.ReadLinesAsInt(fh)
 	if err != nil {
-		fmt.Println("Unable to read input: %v", err)
+		fmt.Printf("Unable to read input: %v\n", err)
 	}
 	ans := partOne(nums)
 	fmt.Printf("Part one: %v\n",ans)
