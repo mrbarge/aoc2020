@@ -126,64 +126,6 @@ func (t Tile) Variants() []Tile {
 	return ret
 }
 
-func (t Tile) IsUpperLeft(tiles []Tile) bool {
-
-	tileLeftMatch := 0
-	tileUpperMatch := 0
-	for _, tile := range tiles {
-		if tile.id == t.id {
-			continue
-		}
-
-		if tile.id == tileLeftMatch || tile.id == tileUpperMatch {
-			continue
-		}
-
-		tmpTile := tile
-		tmpOrig := t
-		for x := 0; x < 3; x++ {
-			for y := 0; y < 3; y++ {
-
-				// find left match
-				if tmpTile.AdjacentHorizontal(tmpOrig) || tmpTile.AdjacentHorizontal(tmpOrig.FlipHorizontal()) {
-					//fmt.Printf("Tile %d Found match 1 with tile %d on rotation %d,%d\n", t.id, tmpTile.id,x,y)
-					tileLeftMatch = tmpTile.id
-				}
-				hf := tmpTile.FlipHorizontal()
-				if hf.AdjacentHorizontal(tmpOrig) || hf.AdjacentHorizontal(tmpOrig.FlipHorizontal()) {
-					//fmt.Printf("Tile %d Found match 2 with tile %d on rotation %d,%d\n", t.id, tmpTile.id,x,y)
-					tileLeftMatch = tmpTile.id
-				}
-				vf := tmpTile.FlipVertical()
-				if vf.AdjacentHorizontal(tmpOrig) || vf.AdjacentHorizontal(tmpOrig.FlipHorizontal()) {
-					//fmt.Printf("Tile %d Found match 3 with tile %d on rotation %d,%d\n", t.id, tmpTile.id,x,y)
-					tileLeftMatch = tmpTile.id
-				}
-
-				// find upper match
-				if tmpTile.AdjacentVertical(tmpOrig) || tmpTile.AdjacentVertical(tmpOrig.FlipVertical()) {
-					//fmt.Printf("Tile %d Found match 1 with tile %d on rotation %d,%d\n", t.id, tmpTile.id,x,y)
-					tileUpperMatch = tmpTile.id
-				}
-				hf = tmpTile.FlipHorizontal()
-				if hf.AdjacentVertical(tmpOrig) || hf.AdjacentVertical(tmpOrig.FlipVertical()) {
-					tileUpperMatch = tmpTile.id
-				}
-				vf = tmpTile.FlipVertical()
-				if vf.AdjacentVertical(tmpOrig) || vf.AdjacentVertical(tmpOrig.FlipVertical()) {
-					tileUpperMatch = tmpTile.id
-				}
-				tmpOrig = tmpOrig.Rotate()
-			}
-			tmpTile = tmpTile.Rotate()
-		}
-		if tileLeftMatch > 0 && tileUpperMatch > 0 {
-			return false
-		}
-	}
-	return true
-}
-
 func (t Tile) AdjacentHorizontal(n Tile) bool {
 	dimX := len(t.data[0]) - 1
 	for y := 0; y < len(t.data); y++ {
