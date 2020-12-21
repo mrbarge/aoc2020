@@ -6,6 +6,20 @@ import (
 	"strings"
 )
 
+func Intersection(a []string, b []string) []string {
+	m := make(map[string]bool)
+	r := make([]string, 0)
+	for _, v := range a {
+		m[v] = true
+	}
+	for _, v := range b{
+		if _, ok := m[v]; ok {
+			r = append(r, v)
+		}
+	}
+	return r
+}
+
 func StrArrayToInt(arr []string) ([]int, error) {
 	ret := make([]int, len(arr))
 	for i, v := range arr {
@@ -32,6 +46,15 @@ func StrCsvToIntArray(s string, sep string) ([]int, error) {
 }
 
 func ContainsInt(i int, a []int) bool {
+	for _, v := range a {
+		if v == i {
+			return true
+		}
+	}
+	return false
+}
+
+func ContainsString(i string, a []string) bool {
 	for _, v := range a {
 		if v == i {
 			return true
