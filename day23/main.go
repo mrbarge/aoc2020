@@ -5,81 +5,105 @@ import (
 	"fmt"
 )
 
+type Cup struct {
+	val int
+	next *Cup
+}
+
+func round(current *Cup, cups map[int]*Cup, max int) (*Cup) {
+
+	chosenCup := current.next
+	chosenCupVals := make([]int, 0)
+	chosenCupVals = append(chosenCupVals, chosenCup.val)
+	chosenCupVals = append(chosenCupVals, chosenCup.next.val)
+	chosenCupVals = append(chosenCupVals, chosenCup.next.next.val)
+	current.next = chosenCup.next.next.next
+
+	// find dest cup
+	targetLabel := current.val - 1
+	found := false
+	for !found {
+		if targetLabel < 1 {
+			targetLabel = max
+		}
+		if !helper.ContainsInt(targetLabel, chosenCupVals) {
+			found = true
+			break
+		}
+		targetLabel--
+	}
+
+	destCup := cups[targetLabel]
+	tmpPtr := destCup.next
+	destCup.next = chosenCup
+	chosenCup.next.next.next = tmpPtr
+
+	return current.next
+}
+
 func partOne(data []int) (ans []int) {
 
-	cups := make(map[int]int)
-	for i, _ := range data {
-		if i+1 < len(data) {
-			cups[data[i]] = data[i+1]
-		} else {
-			cups[data[i]] = data[0]
-		}
+	// make the ring'o'cups
+	cupMap := make(map[int]*Cup)
+	currentCup := Cup{
+		val: data[0],
 	}
-	current := data[0]
+	cupMap[currentCup.val] = &currentCup
+	lastCup := &currentCup
+	for i := 1; i < len(data); i++ {
+		nextCup := Cup{
+			val: data[i],
+		}
+		cupMap[data[i]] = &nextCup
+		lastCup.next = &nextCup
+		lastCup = &nextCup
+	}
+	lastCup.next = &currentCup
+
+	loopCup := &currentCup
 	for i := 0; i < 100; i++ {
-		cups, current = round(cups, current, 9)
+		loopCup = round(loopCup, cupMap, 9)
 	}
 
-	v := cups[1]
 	ans = make([]int, 0)
-	ans = append(ans, v)
-	for v != 1 {
-		v = cups[v]
-		ans = append(ans, v)
+	loopCup = cupMap[1].next
+	for len(ans) != 8 {
+		ans = append(ans, loopCup.val)
+		loopCup = loopCup.next
 	}
 	return ans
 }
 
-func partTwo(data []int) int {
+func partTwo(data []int) (ans int) {
 
 	for i := 10; i <= 1000000; i++ {
 		data = append(data, i)
 	}
-	cups := make(map[int]int)
-	for i, _ := range data {
-		if i+1 < len(data) {
-			cups[data[i]] = data[i+1]
-		} else {
-			cups[data[i]] = data[0]
-		}
+
+	// make the ring'o'cups
+	cupMap := make(map[int]*Cup)
+	currentCup := Cup{
+		val: data[0],
 	}
-	current := data[0]
+	cupMap[currentCup.val] = &currentCup
+	lastCup := &currentCup
+	for i := 1; i < len(data); i++ {
+		nextCup := Cup{
+			val: data[i],
+		}
+		cupMap[data[i]] = &nextCup
+		lastCup.next = &nextCup
+		lastCup = &nextCup
+	}
+	lastCup.next = &currentCup
+
+	loopCup := &currentCup
 	for i := 0; i < 10000000; i++ {
-		cups, current = round(cups, current, 1000000)
+		loopCup = round(loopCup, cupMap, 1000000)
 	}
 
-	t1 := cups[1]
-	t2 := cups[t1]
-	ans := t1 * t2
+	ans = cupMap[1].next.val * cupMap[1].next.next.val
 	return ans
-}
-
-func round(cups map[int]int, current int, max int) (map[int]int, int) {
-
-	chosenCups := make([]int, 0)
-	cPos := current
-	for i := 0; i < 3; i++ {
-		cPos = cups[cPos]
-		chosenCups = append(chosenCups, cPos)
-	}
-	cups[current] = cups[cPos]
-
-	destCup := current-1
-	found := false
-	for !found {
-		if destCup <= 0 {
-			destCup = max
-		}
-		if !helper.ContainsInt(destCup, chosenCups) {
-			// not in the seen pile, must be valid
-			found = true
-			break
-		}
-		destCup--
-	}
-	cups[destCup], cups[chosenCups[len(chosenCups)-1]] = chosenCups[0], cups[destCup]
-
-	return cups, cups[current]
 }
 
 func main() {
